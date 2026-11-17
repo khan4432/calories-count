@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness & Food Tracker - Team Tracker</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #64748b;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Card Layout */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        button.submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        button.submit-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Tables & Lists */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .summary-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge.surplus { background: #fee2e2; color: #991b1b; }
+        .badge.deficit { background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏋️‍♂️ Team Fitness & Food Tracker</h1>
+        <p>Huzaifa, Ali, Saima, aur Imran ka Daily Calorie & Activity Dashboard</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('foodTab')">🍔 Food Log & Calories</button>
+        <button class="tab-btn" onclick="switchTab('activityTab')">🔥 Fat Burning & Sports</button>
+    </div>
+
+    <!-- TAB 1: FOOD LOG -->
+    <div id="foodTab" class="tab-content active">
+        <div class="card">
+            <h2>Log Your Dish</h2>
+            <form id="foodForm">
+                <div class="form-group">
+                    <label for="foodUser">Naam Select Karo:</label>
+                    <select id="foodUser" required>
+                        <option value="Huzaifa">Huzaifa</option>
+                        <option value="Ali">Ali</option>
+                        <option value="Saima">Saima</option>
+                        <option value="Imran">Imran</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dishName">Dish Ka Naam (e.g., Biryani, Pizza, Dal Khichdi):</label>
+                    <input type="text" id="dishName" placeholder="Dish name daalo..." required>
+                </div>
+                <div class="form-group">
+                    <label for="dishCalories">Approx Calories (Agar pata ho ya auto-estimate):</label>
+                    <input type="number" id="dishCalories" placeholder="Jaise: 450 (Chhod bhi sakte ho auto calculation ke liye)" />
+                    <small style="color:#64748b;">Note: Agar khali chhoda toh common database se automatic calculate ho jayega.</small>
+                </div>
+                <button type="submit" class="submit-btn">Add Food Entry</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Team Daily Summary (Recommended: ~2000 kcal)</h2>
+            <div id="foodSummary" class="summary-box">
+                <!-- Dynamic Summary generated via JS -->
+            </div>
+
+            <h2>Recent Food Logs</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Naam</th>
+                        <th>Dish</th>
+                        <th>Calories</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="foodTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: FAT BURNING -->
+    <div id="activityTab" class="tab-content">
+        <div class="card">
+            <h2>Log Walk / Sports Activity</h2>
+            <form id="activityForm">
+                <div class="form-group">
+                    <label for="actUser">Naam Select Karo:</label>
+                    <select id="actUser" required>
+                        <option value="Huzaifa">Huzaifa</option>
+                        <option value="Ali">Ali</option>
+                        <option value="Saima">Saima</option>
+                        <option value="Imran">Imran</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="activityType">Activity / Sport Select Karo:</label>
+                    <select id="activityType" required>
+                        <option value="Walking">Walking (Steps/Distance)</option>
+                        <option value="Running">Running / Jogging</option>
+                        <option value="Football">Football / Cricket (Sports)</option>
+                        <option value="Badminton">Badminton</option>
+                        <option value="Gym / Workout">Gym / Weight Training</option>
+                    </select>
+                </div>
+                <div class="form-group" id="metricGroup">
+                    <label id="metricLabel" for="activityMetric">Distance (in KM) / Duration:</label>
+                    <input type="number" step="0.1" id="activityMetric" placeholder="Jaise: 3 (KM) ya minutes" required>
+                </div>
+                <div class="form-group">
+                    <label for="actDuration">Duration (in Minutes):</label>
+                    <input type="number" id="actDuration" placeholder="Jaise: 30 minutes" required>
+                </div>
+                <button type="submit" class="submit-btn">Add Activity</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Activity & Fat Burning Records</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Naam</th>
+                        <th>Activity</th>
+                        <th>Details</th>
+                        <th>Time (Mins)</th>
+                        <th>Calories Burned</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab Switching Logic
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Common Calorie Estimator Database
+    const calorieDB = {
+        'biryani': 600,
+        'kepsa': 750,
+        'fried rice': 400,
+        'pizza': 300,
+        'burger': 450,
+        'dal khichdi': 300,
+        'sandwich': 350,
+        'noodles': 400,
+        'tandoori': 350
+    };
+
+    function estimateCalories(dish) {
+        let lower = dish.toLowerCase();
+        for (let key in calorieDB) {
+            if (lower.includes(key)) {
+                return calorieDB[key];
+            }
+        }
+        return 350; // Default average meal calorie
+    }
+
+    // Load Data from LocalStorage
+    let foodLogs = JSON.parse(localStorage.getItem('foodLogs')) || [];
+    let activityLogs = JSON.parse(localStorage.getItem('activityLogs')) || [];
+    const RECOMMENDED_CALORIES = 2000;
+
+    // Food Form Submit
+    document.getElementById('foodForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const user = document.getElementById('foodUser').value;
+        const dish = document.getElementById('dishName').value;
+        let cals = document.getElementById('dishCalories').value;
+
+        cals = cals ? parseInt(cals) : estimateCalories(dish);
+
+        foodLogs.push({ id: Date.now(), user, dish, cals });
+        localStorage.setItem('foodLogs', JSON.stringify(foodLogs));
+
+        this.reset();
+        renderFoodData();
+    });
+
+    function deleteFood(id) {
+        foodLogs = foodLogs.filter(item => item.id !== id);
+        localStorage.setItem('foodLogs', JSON.stringify(foodLogs));
+        renderFoodData();
+    }
+
+    function renderFoodData() {
+        const tbody = document.getElementById('foodTableBody');
+        tbody.innerHTML = '';
+        
+        let userTotals = { 'Huzaifa': 0, 'Ali': 0, 'Saima': 0, 'Imran': 0 };
+
+        foodLogs.forEach(item => {
+            userTotals[item.user] = (userTotals[item.user] || 0) + item.cals;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${item.user}</b></td>
+                    <td>${item.dish}</td>
+                    <td>${item.cals} kcal</td>
+                    <td><button onclick="deleteFood(${item.id})" style="background:#ef4444;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Delete</button></td>
+                </tr>
+            `;
+        });
+
+        // Render Summary Boxes
+        const summaryBox = document.getElementById('foodSummary');
+        summaryBox.innerHTML = '';
+        ['Huzaifa', 'Ali', 'Saima', 'Imran'].forEach(user => {
+            let total = userTotals[user];
+            let diff = total - RECOMMENDED_CALORIES;
+            let badgeClass = diff > 0 ? 'surplus' : 'deficit';
+            let diffText = diff > 0 ? `+${diff} kcal (Over)` : `${diff} kcal (Under)`;
+
+            summaryBox.innerHTML += `
+                <div class="stat-card">
+                    <h3>${user}</h3>
+                    <p>${total} kcal</p>
+                    <small class="badge ${badgeClass}">${diffText}</small>
+                </div>
+            `;
+        });
+    }
+
+    // Activity Form Submit
+    document.getElementById('activityForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const user = document.getElementById('actUser').value;
+        const activity = document.getElementById('activityType').value;
+        const metric = document.getElementById('activityMetric').value;
+        const duration = parseInt(document.getElementById('actDuration').value);
+
+        // Approximate calorie burn calculation based on duration & activity type
+        let burnRatePerMin = 7; // default
+        if (activity === 'Running') burnRatePerMin = 11;
+        if (activity === 'Football' || activity === 'Cricket') burnRatePerMin = 10;
+        if (activity === 'Walking') burnRatePerMin = 5;
+        if (activity === 'Badminton') burnRatePerMin = 8;
+
+        let caloriesBurned = duration * burnRatePerMin;
+
+        activityLogs.push({ id: Date.now(), user, activity, metric, duration, caloriesBurned });
+        localStorage.setItem('activityLogs', JSON.stringify(activityLogs));
+
+        this.reset();
+        renderActivityData();
+    });
+
+    function deleteActivity(id) {
+        activityLogs = activityLogs.filter(item => item.id !== id);
+        localStorage.setItem('activityLogs', JSON.stringify(activityLogs));
+        renderActivityData();
+    }
+
+    function renderActivityData() {
+        const tbody = document.getElementById('activityTableBody');
+        tbody.innerHTML = '';
+
+        activityLogs.forEach(item => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${item.user}</b></td>
+                    <td>${item.activity}</td>
+                    <td>${item.metric} units</td>
+                    <td>${item.duration} mins</td>
+                    <td><span style="color: #166534; font-weight: bold;">-${item.caloriesBurned} kcal</span></td>
+                    <td><button onclick="deleteActivity(${item.id})" style="background:#ef4444;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Delete</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    // Initial Render on Load
+    renderFoodData();
+    renderActivityData();
+</script>
+
+</body>
+</html>
